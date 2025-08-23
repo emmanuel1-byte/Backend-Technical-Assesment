@@ -1,0 +1,47 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.STAGING_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.PROD_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/dev" ]; then
+            echo "🚀 Deploying to STAGING EC2..."
+            ssh ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} "
+              cd /var/www/staging-app &&
+              git fetch origin dev &&
+              git reset --hard origin/dev &&
+              npm ci &&
+              npm run build &&
+              pm2 restart staging-app || pm2 start dist/index.js --name staging-app
+            "
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "🚀 Deploying to PRODUCTION EC2..."
+            ssh ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "
+              cd /var/www/prod-app &&
+              git fetch origin main &&
+              git reset --hard origin/main &&
+              npm ci &&
+              npm run build &&
+              pm2 restart prod-app || pm2 start dist/index.js --name prod-app
+            "
+          fi
