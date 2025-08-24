@@ -26,9 +26,9 @@ describe("ProductService", () => {
     });
 
     it("should throw if product exists", async () => {
-      jest
-        .spyOn(service, "getByName")
-        .mockResolvedValueOnce({ name: "Test" } as any);
+      (Product.findOne as jest.Mock).mockResolvedValueOnce({
+        name: "Test",
+      } as any);
 
       await expect(service.create({ name: "Test" } as any)).rejects.toThrow(
         ResourceAlreadyExists

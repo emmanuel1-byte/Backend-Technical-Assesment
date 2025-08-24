@@ -9,7 +9,7 @@ class ProductService {
   constructor() {}
 
   async create(payload: TProduct) {
-    const product = await this.getByName(payload.name);
+    const product = await Product.findOne({ name: payload.name });
     if (product) {
       throw new ResourceAlreadyExists("Product already exists");
     }
