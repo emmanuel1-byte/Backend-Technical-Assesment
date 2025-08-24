@@ -45,7 +45,7 @@ npm install
 Create a `.env` file in the root directory and add:
 
 ```env
-PORT=5000
+PORT=
 MONGO_URI=<your-database-url>
 ```
 
