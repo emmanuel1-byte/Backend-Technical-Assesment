@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./dist/server",
     "dev": "cross-env NODE_ENV=development tsx watch --clear-screen=false server",
-    "build":"tsc",
+    "build": "tsc",
     "test": "jest --runInBand --detectOpenHandles",
     "test:coverage": "jest --coverage"
   },
@@ -20,12 +20,14 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "mongoose": "^8.18.0",
+    "winston": "^3.17.0",
     "zod": "^4.0.17"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",
+    "@types/winston": "^2.4.4",
     "jest": "^30.0.5",
     "ts-jest": "^29.4.1"
   }
