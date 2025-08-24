@@ -1,5 +1,9 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  testMatch: ["**/?(*.)+(spec|test).[jt]s?(x)"],
+  testMatch: ["**/src/test/unit/**/*.spec.ts"], // only TS unit tests
+  moduleFileExtensions: ["ts", "js", "json", "node"],
+  clearMocks: true,
+  collectCoverage: true,
+  coverageDirectory: "coverage",
 };
