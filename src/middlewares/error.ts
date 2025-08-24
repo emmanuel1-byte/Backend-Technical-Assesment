@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DomainError, HttpError } from "../utils/custom-errors";
+import { ApplicationError, HttpError } from "../utils/custom-errors";
 import logger from "../utils/logger";
 import { ZodError, ZodRealError } from "zod";
 
@@ -8,13 +8,11 @@ export function routeNotFoundErrorHandler(
   res: Response,
   next: NextFunction
 ) {
-  res
-    .status(404)
-    .json({
-      success: false,
-      code: "ROUTE_NOT_FOUND",
-      message: "The requested endpoint does not exist",
-    });
+  res.status(404).json({
+    success: false,
+    code: "ROUTE_NOT_FOUND",
+    message: "The requested endpoint does not exist",
+  });
   next();
 }
 
@@ -35,7 +33,7 @@ export function globalErrorHandler(
     return next(err);
   }
 
-  if (err instanceof DomainError) {
+  if (err instanceof ApplicationError) {
     return res.status(err.statusCode).json({
       success: false,
       code: err.errorCode,
